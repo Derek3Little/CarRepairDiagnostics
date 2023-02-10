@@ -9,6 +9,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class CarDiagnosticEngine {
 
@@ -39,7 +43,68 @@ public class CarDiagnosticEngine {
 		 * console output is as least as informative as the provided methods.
 		 */
 
+			// First
 
+		boolean exitFlag = false;
+		// year check, null or empty input
+		if (car.getYear() == null || car.getYear().equals("")) {
+			System.out.println("Vehicle year is missing");
+			exitFlag = true;
+		}
+
+		// make check, null or empty input
+		if (car.getMake() == null || car.getMake().equals("")) {
+			System.out.println("Vehicle make is missing");
+			exitFlag = true;
+		}
+
+		// model check, null or empty input
+		if (car.getModel() == null || car.getModel().equals("")) {
+			System.out.println("Vehicle model is missing");
+			exitFlag = true;
+		}
+
+		// if checks fail and set exitFlag, exit!
+		if (exitFlag) {
+			System.exit(0); // ending diag early
+		}
+
+			// Second
+
+		// missing parts check
+		Map<PartType, Integer> missingPartsMap = car.getMissingPartsMap();
+
+		// if empty hashmap with no missing parts, bypass
+		if (missingPartsMap.size() > 0) {
+			PartType[] partsArray = missingPartsMap.keySet().toArray(new PartType[0]);
+
+			for (int i = 0; i < partsArray.length; i++) {
+				printMissingPart(partsArray[i], missingPartsMap.get(partsArray[i]));
+			}
+
+			System.exit(0); // ending diag early
+		}
+
+			// Third
+
+		// working parts check
+		Part[] partsArray = car.getParts().toArray(new Part[0]);
+		for (int i = 0; i < partsArray.length; i++) {
+
+			if (!partsArray[i].isInWorkingCondition()) {
+				printDamagedPart(partsArray[i].getType(), partsArray[i].getCondition());
+				exitFlag = true;
+			}
+		}
+
+		if (exitFlag) {
+			System.exit(0); // ending diag early
+		}
+
+			// Fourth
+
+		System.out.println("Your mint condition " + car.getYear() + " " + car.getMake() + " " + car.getModel() +
+				" is in perfect working order!");
 	}
 
 	private void printMissingPart(PartType partType, Integer count) {

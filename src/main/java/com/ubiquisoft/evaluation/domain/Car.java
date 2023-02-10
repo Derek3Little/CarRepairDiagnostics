@@ -3,6 +3,7 @@ package com.ubiquisoft.evaluation.domain;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +32,45 @@ public class Car {
 		 *      }
 		 */
 
-		return null;
+			// Second
+
+		// hashmap for return, populated with all necessary parts
+		HashMap<PartType, Integer> hashMap = new HashMap<>(5);
+		hashMap.put(PartType.ENGINE, 1);
+		hashMap.put(PartType.ELECTRICAL, 1);
+		hashMap.put(PartType.FUEL_FILTER, 1);
+		hashMap.put(PartType.OIL_FILTER, 1);
+		hashMap.put(PartType.TIRE, 4);
+
+		// remove/decrement parts as they are validated
+		for (int i = 0; i < parts.size(); i++) {
+			switch (parts.get(i).getType()) {
+				case ENGINE:
+					hashMap.remove(PartType.ENGINE);
+					break;
+				case ELECTRICAL:
+					hashMap.remove(PartType.ELECTRICAL);
+					break;
+				case FUEL_FILTER:
+					hashMap.remove(PartType.FUEL_FILTER);
+					break;
+				case OIL_FILTER:
+					hashMap.remove(PartType.OIL_FILTER);
+					break;
+				case TIRE:
+					int count = hashMap.get(PartType.TIRE);
+					count--;
+					if (count == 0) {
+						hashMap.remove(PartType.TIRE);
+					} else {
+						hashMap.put(PartType.TIRE, count);
+					}
+					break;
+			}
+		}
+
+		// return hashmap containing only missing parts and counts, or empty hashmap
+		return hashMap;
 	}
 
 	@Override
