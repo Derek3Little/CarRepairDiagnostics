@@ -9,10 +9,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CarDiagnosticEngine {
 
@@ -68,30 +65,29 @@ public class CarDiagnosticEngine {
 		Map<PartType, Integer> missingPartsMap = car.getMissingPartsMap();
 
 		// if empty hashmap with no missing parts, bypass
-		if (missingPartsMap.size() > 0) {
-			PartType[] partsArray = missingPartsMap.keySet().toArray(new PartType[0]);
+		if (!missingPartsMap.isEmpty()) {
 
-			for (int i = 0; i < partsArray.length; i++) {
-				printMissingPart(partsArray[i], missingPartsMap.get(partsArray[i]));
+			for (PartType missingPart : missingPartsMap.keySet()) {
+				printMissingPart(missingPart, missingPartsMap.get(missingPart));
 			}
 
-			System.exit(0); // ending diag early
+			// ending diagnostics early due to missing parts
+			return;
 		}
 
 			// Third
 
-		// working parts check
-		Part[] partsArray = car.getParts().toArray(new Part[0]);
-		for (int i = 0; i < partsArray.length; i++) {
+		// damaged parts check
+		List<Part> damagedPartsList = car.getDamagedPartsList();
 
-			if (!partsArray[i].isInWorkingCondition()) {
-				printDamagedPart(partsArray[i].getType(), partsArray[i].getCondition());
-				exitFlag = true;
+		// if empty list with no damaged parts, bypass
+		if (!damagedPartsList.isEmpty()) {
+			for (Part damagedPart : damagedPartsList) {
+				printDamagedPart(damagedPart.getType(), damagedPart.getCondition());
 			}
-		}
 
-		if (exitFlag) {
-			System.exit(0); // ending diag early
+			// ending diagnostics early due to damaged parts
+			return;
 		}
 
 			// Fourth
