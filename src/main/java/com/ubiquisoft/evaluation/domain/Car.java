@@ -73,6 +73,14 @@ public class Car {
 		return hashMap;
 	}
 
+	// adding method for 'third' section
+	// collecting damaged parts in manner similar to getMissingPartsMap()
+	public List<Part> getDamagedPartsList() {
+		List<Part> partsList = getParts();
+		partsList.removeIf(Part::isInWorkingCondition);
+		return partsList;
+	}
+
 	@Override
 	public String toString() {
 		return "Car{" +
