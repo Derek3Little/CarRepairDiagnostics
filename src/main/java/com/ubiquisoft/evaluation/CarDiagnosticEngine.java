@@ -45,28 +45,21 @@ public class CarDiagnosticEngine {
 
 			// First
 
-		boolean exitFlag = false;
-		// year check, null or empty input
-		if (car.getYear() == null || car.getYear().equals("")) {
-			System.out.println("Vehicle year is missing");
-			exitFlag = true;
-		}
+		// validating car data fields present
+		if (car.getYear() == null || car.getMake() == null || car.getModel() == null) {
 
-		// make check, null or empty input
-		if (car.getMake() == null || car.getMake().equals("")) {
-			System.out.println("Vehicle make is missing");
-			exitFlag = true;
-		}
+			if (car.getYear() == null) {
+				System.out.println("Missing Vehicle Data Field Detected: YEAR");
+			}
+			if (car.getMake() == null) {
+				System.out.println("Missing Vehicle Data Field Detected: MAKE");
+			}
+			if (car.getModel() == null) {
+				System.out.println("Missing Vehicle Data Field Detected: MODEL");
+			}
 
-		// model check, null or empty input
-		if (car.getModel() == null || car.getModel().equals("")) {
-			System.out.println("Vehicle model is missing");
-			exitFlag = true;
-		}
-
-		// if checks fail and set exitFlag, exit!
-		if (exitFlag) {
-			System.exit(0); // ending diag early
+			// ending diagnostics early due to missing data field(s)
+			return;
 		}
 
 			// Second
